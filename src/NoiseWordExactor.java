@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.*;
 
 import static java.nio.file.StandardOpenOption.CREATE;
 
@@ -11,6 +12,10 @@ public class NoiseWordExactor extends JFileChooser {
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         File selectedFile;
         String rec = "";
+
+        ArrayList<String> stopWords = new ArrayList<>();
+
+        Map<String, Integer> wordFrequency = new TreeMap<>();
         try{
             File workingDirectory = new File(System.getProperty("user.dir"));
             chooser.setCurrentDirectory(workingDirectory);
@@ -21,11 +26,21 @@ public class NoiseWordExactor extends JFileChooser {
 
                 InputStream in =
                         new BufferedInputStream(Files.newInputStream(file,CREATE));
-                BufferedReader br =
+                BufferedReader reader =
                         new BufferedReader(new InputStreamReader(in));
 
-                String line;
+                while(reader.ready()){
+                    rec = reader.readLine();
+
+                    String[] words = rec.split("[,.!?\\s]");
+                    for(String word : words){
+                        wordFrequency.merge(word, 1, Integer::sum);
+                    }
+                }
             }
+
+            System.out.println(wordFrequency);
+
 
         }
         catch(IOException e){
