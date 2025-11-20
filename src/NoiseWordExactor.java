@@ -6,47 +6,47 @@ import java.util.*;
 
 import static java.nio.file.StandardOpenOption.CREATE;
 
-public class NoiseWordExactor extends JFileChooser {
-    public NoiseWordExactor() {
+public class NoiseWordExactor{
+    public static void main(String[] args) throws IOException {
         JFileChooser chooser = new JFileChooser();
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         File selectedFile;
         String rec = "";
 
         ArrayList<String> stopWords = new ArrayList<>();
-
         Map<String, Integer> wordFrequency = new TreeMap<>();
-        try{
+        try {
             File workingDirectory = new File(System.getProperty("user.dir"));
             chooser.setCurrentDirectory(workingDirectory);
 
-            if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
+            if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 selectedFile = chooser.getSelectedFile();
                 Path file = selectedFile.toPath();
 
-                InputStream in =
-                        new BufferedInputStream(Files.newInputStream(file,CREATE));
-                BufferedReader reader =
-                        new BufferedReader(new InputStreamReader(in));
+                BufferedReader reader = Files.newBufferedReader(file);
 
-                while(reader.ready()){
+                while (reader.ready()) {
                     rec = reader.readLine();
 
-                    String[] words = rec.split("[,.!?\\s]");
-                    for(String word : words){
-                        wordFrequency.merge(word, 1, Integer::sum);
+                    String[] words = rec.split("[^a-zA-Z]+");
+                    for (String word : words) {
+                        String lowerCaseWord = word.toLowerCase();
+                        if(!lowerCaseWord.isEmpty()){
+                            wordFrequency.merge(word, 1, Integer::sum);
+                        }
                     }
                 }
             }
 
-            System.out.println(wordFrequency);
+            NoiseWords noiseProcessor = new NoiseWords(wordFrequency);
+            stopWords =  noiseProcessor.getStopWords();
+
+            noiseProcessor.printStopWords();
 
 
-        }
-        catch(IOException e){
-            JOptionPane.showMessageDialog(null,e.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
-
     }
 }
