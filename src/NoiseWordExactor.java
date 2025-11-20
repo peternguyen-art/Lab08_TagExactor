@@ -43,7 +43,12 @@ public class NoiseWordExactor{
 
             noiseProcessor.printStopWords();
 
+            noiseProcessor.filterWords(stopWords);
 
+            noiseProcessor.getFilteredWordFrequency();
+
+            System.out.println(wordFrequency);
+            
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
