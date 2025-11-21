@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/NoiseWordsExactor.iml" filepath="$PROJECT_DIR$/NoiseWordsExactor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TagExtractor.iml" filepath="$PROJECT_DIR$/TagExtractor.iml" />
     </modules>
   </component>
 </project>

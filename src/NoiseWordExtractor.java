@@ -4,17 +4,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
-import static java.nio.file.StandardOpenOption.CREATE;
+public class NoiseWordExtractor {
+    Map<String, Integer> wordFrequency = new TreeMap<>();
 
-public class NoiseWordExactor{
-    public static void main(String[] args) throws IOException {
+    public NoiseWordExtractor(Map<String, Integer> wordFrequency) {
+        this.wordFrequency = wordFrequency;
+    }
+
+    public void getFile(){
+
         JFileChooser chooser = new JFileChooser();
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         File selectedFile;
         String rec = "";
 
-        ArrayList<String> stopWords = new ArrayList<>();
-        Map<String, Integer> wordFrequency = new TreeMap<>();
         try {
             File workingDirectory = new File(System.getProperty("user.dir"));
             chooser.setCurrentDirectory(workingDirectory);
@@ -32,23 +35,23 @@ public class NoiseWordExactor{
                     for (String word : words) {
                         String lowerCaseWord = word.toLowerCase();
                         if(!lowerCaseWord.isEmpty()){
-                            wordFrequency.merge(word, 1, Integer::sum);
+                            wordFrequency.merge(lowerCaseWord, 1, Integer::sum);
                         }
                     }
                 }
             }
 
-            NoiseWords noiseProcessor = new NoiseWords(wordFrequency);
-            stopWords =  noiseProcessor.getStopWords();
+//            NoiseWords noiseProcessor = new NoiseWords(wordFrequency);
+//            stopWords =  noiseProcessor.getStopWords();
+//
+//            noiseProcessor.printStopWords();
+//
+//            noiseProcessor.filterWords(stopWords);
+//
+//            noiseProcessor.getFilteredWordFrequency();
+//
+//            System.out.println(wordFrequency);
 
-            noiseProcessor.printStopWords();
-
-            noiseProcessor.filterWords(stopWords);
-
-            noiseProcessor.getFilteredWordFrequency();
-
-            System.out.println(wordFrequency);
-            
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
