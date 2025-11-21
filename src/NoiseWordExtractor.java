@@ -41,17 +41,6 @@ public class NoiseWordExtractor {
                 }
             }
 
-//            NoiseWords noiseProcessor = new NoiseWords(wordFrequency);
-//            stopWords =  noiseProcessor.getStopWords();
-//
-//            noiseProcessor.printStopWords();
-//
-//            noiseProcessor.filterWords(stopWords);
-//
-//            noiseProcessor.getFilteredWordFrequency();
-//
-//            System.out.println(wordFrequency);
-
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();

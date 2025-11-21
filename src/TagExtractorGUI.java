@@ -1,6 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
@@ -79,6 +85,10 @@ public class TagExtractorGUI extends JFrame {
             generateWordExtractor();
         });
 
+        saveBtn.addActionListener((ActionEvent e) -> {
+            saveFile();
+        });
+
         quitBtn.addActionListener((ActionEvent e) -> exit(0));
         btnPnl.add(searchBtn);
         btnPnl.add(saveBtn);
@@ -86,6 +96,9 @@ public class TagExtractorGUI extends JFrame {
     }
 
     private void generateWordExtractor() {
+        textArea.setText("");
+        wordFrequency.clear();
+
         noiseWordExtractor.getFile();
 
         NoiseWords noiseProcessor = new NoiseWords(wordFrequency);
@@ -99,5 +112,38 @@ public class TagExtractorGUI extends JFrame {
         }
     }
 
+    private void saveFile() {
+        String textToSave = textArea.getText();
 
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Save Filtered Tags");
+
+        fileChooser.setSelectedFile(new File("filtered_tags.txt"));
+
+        int userSelection = fileChooser.showSaveDialog(this);
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            Path filePath = fileChooser.getSelectedFile().toPath();
+
+            if (!filePath.toString().toLowerCase().endsWith(".txt")) {
+                filePath = Paths.get(filePath.toString() + ".txt");
+            }
+
+            try {
+                Files.writeString(filePath, textToSave, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+
+                JOptionPane.showMessageDialog(this,
+                        "Successfully saved data to:\n" + filePath.getFileName(),
+                        "Save Successful",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this,
+                        "Error saving file: " + e.getMessage(),
+                        "Save Error",
+                        JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
+            }
+        }
+    }
 }
